@@ -1,17 +1,18 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { useDispatch, useSelector, TypedUseSelectorHook } from 'react-redux';
-
-// Import reducers here when created
-// import pollsReducer from './slices/pollsSlice';
-// import authReducer from './slices/authSlice';
+import pollsReducer from './slices/pollsSlice';
+import authReducer from './slices/authSlice';
 
 // Create Redux store with slices
 export const store = configureStore({
   reducer: {
-    // polls: pollsReducer,
-    // auth: authReducer,
+    polls: pollsReducer,
+    auth: authReducer,
     // Add more reducers as needed
   },
+  // Add middleware and devTools configuration if needed
+  // middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(logger),
+  // devTools: process.env.NODE_ENV !== 'production',
 });
 
 // Define types for dispatch and state
