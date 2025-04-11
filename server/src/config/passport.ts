@@ -37,37 +37,47 @@ export default function configurePassport() {
     }
   });
 
-  // Configure Google OAuth Strategy
-  passport.use(
-    new GoogleStrategy(
-      {
-        clientID: process.env.GOOGLE_CLIENT_ID || '',
-        clientSecret: process.env.GOOGLE_CLIENT_SECRET || '',
-        callbackURL: process.env.GOOGLE_CALLBACK_URL || '',
-      },
-      async (accessToken: string, refreshToken: string, profile: Profile, done: VerifyCallback) => {
-        try {
-          // Find or create user
-          const user = await prisma.user.upsert({
-            where: { googleId: profile.id },
-            update: {},
-            create: {
-              email: profile.emails?.[0]?.value || '',
-              name: profile.displayName,
-              profileImage: profile.photos?.[0]?.value,
-              googleId: profile.id,
-            },
-          });
-          
-          return done(null, user);
-        } catch (error) {
-          // Type cast error to something safer than any
-          const err = error instanceof Error ? error : new Error('Unknown error during authentication');
-          return done(err, undefined);
-        }
-      }
-    )
+  // Configure Google OAuth Strategy only if credentials are available
+  // Skip strategy initialization in test environment or when credentials are missing
+  const isTestEnvironment = process.env.NODE_ENV === 'test';
+  const hasCredentials = !!(
+    process.env.GOOGLE_CLIENT_ID && 
+    process.env.GOOGLE_CLIENT_SECRET && 
+    process.env.GOOGLE_CALLBACK_URL
   );
+
+  if (!isTestEnvironment && hasCredentials) {
+    passport.use(
+      new GoogleStrategy(
+        {
+          clientID: process.env.GOOGLE_CLIENT_ID || '',
+          clientSecret: process.env.GOOGLE_CLIENT_SECRET || '',
+          callbackURL: process.env.GOOGLE_CALLBACK_URL || '',
+        },
+        async (accessToken: string, refreshToken: string, profile: Profile, done: VerifyCallback) => {
+          try {
+            // Find or create user
+            const user = await prisma.user.upsert({
+              where: { googleId: profile.id },
+              update: {},
+              create: {
+                email: profile.emails?.[0]?.value || '',
+                name: profile.displayName,
+                profileImage: profile.photos?.[0]?.value,
+                googleId: profile.id,
+              },
+            });
+            
+            return done(null, user);
+          } catch (error) {
+            // Type cast error to something safer than any
+            const err = error instanceof Error ? error : new Error('Unknown error during authentication');
+            return done(err, undefined);
+          }
+        }
+      )
+    );
+  }
 
   return passport;
 }
