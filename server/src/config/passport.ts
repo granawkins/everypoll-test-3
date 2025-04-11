@@ -12,7 +12,11 @@ type UserType = {
 };
 
 // Define type for the done callback used in passport strategies
-type VerifyCallback = (error: Error | null, user?: any, info?: any) => void;
+type VerifyCallback = (
+  error: Error | null, 
+  user?: UserType | false, 
+  info?: { message: string }
+) => void;
 
 // Add passport-express.d.ts in your types directory if needed for a long-term solution
 
