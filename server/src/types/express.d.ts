@@ -1,5 +1,4 @@
 // Type definitions for express with Passport
-import { Request } from 'express';
 
 // Extend Express Request interface with Passport properties
 declare global {
