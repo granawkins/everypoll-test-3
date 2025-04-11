@@ -1,24 +1,28 @@
 import passport from 'passport';
-import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
+import { Strategy as GoogleStrategy, Profile } from 'passport-google-oauth20';
 import prisma from './database';
 import { User as PrismaUser } from '@prisma/client';
 
-// Declare type augmentation for passport
-declare global {
-  namespace Express {
-    // eslint-disable-next-line @typescript-eslint/no-empty-interface
-    interface User extends PrismaUser {}
-  }
-}
+// Define a UserType that's compatible with both Express and Prisma
+type UserType = {
+  id: string;
+  email: string;
+  name?: string | null;
+  profileImage?: string | null;
+  googleId?: string | null;
+};
+
+// Add passport-express.d.ts in your types directory if needed for a long-term solution
 
 export default function configurePassport() {
   // Serialize and deserialize user for sessions
-  // Use type any to avoid conflicts between Passport and Prisma types
-  passport.serializeUser((user: any, done: any) => {
-    done(null, user.id);
+  passport.serializeUser<string>((user, done) => {
+    // The user object comes from our strategy's verify callback
+    const userObj = user as UserType;
+    done(null, userObj.id);
   });
 
-  passport.deserializeUser(async (id: string, done: any) => {
+  passport.deserializeUser(async (id: string, done) => {
     try {
       const user = await prisma.user.findUnique({ where: { id } });
       done(null, user);
@@ -35,7 +39,7 @@ export default function configurePassport() {
         clientSecret: process.env.GOOGLE_CLIENT_SECRET || '',
         callbackURL: process.env.GOOGLE_CALLBACK_URL || '',
       },
-      async (accessToken, refreshToken, profile, done) => {
+      async (accessToken: string, refreshToken: string, profile: Profile, done: Function) => {
         try {
           // Find or create user
           const user = await prisma.user.upsert({
@@ -51,7 +55,9 @@ export default function configurePassport() {
           
           return done(null, user);
         } catch (error) {
-          return done(error as Error, undefined);
+          // Type cast error to something safer than any
+          const err = error instanceof Error ? error : new Error('Unknown error during authentication');
+          return done(err, undefined);
         }
       }
     )
