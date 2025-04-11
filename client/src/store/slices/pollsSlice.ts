@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from '../../api/axios';
 
 // Types for poll data
@@ -127,7 +127,7 @@ const pollsSlice = createSlice({
   name: 'polls',
   initialState,
   reducers: {
-    resetPollsState: (state) => {
+    resetPollsState: () => {
       return initialState;
     },
     clearCurrentPoll: (state) => {

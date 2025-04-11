@@ -66,7 +66,7 @@ configurePassport(); // Set up passport strategies
 app.use(express.static(CLIENT_DIST_PATH));
 
 // Error handler middleware
-app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+app.use((err: Error, req: Request, res: Response) => {
   console.error(err.stack);
   res.status(500).json({
     message: 'Something went wrong!',
