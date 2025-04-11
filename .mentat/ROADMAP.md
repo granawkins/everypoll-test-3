@@ -4,14 +4,14 @@ This roadmap outlines the steps needed to transform the JavaScript template into
 
 ## 1. Project Setup & Initial Configuration
 
-- [ ] Define database schema for polls, users, and votes
+- [x] Define database schema for polls, users, and votes
 - [ ] Setup basic API endpoints structure
 - [ ] Define React component architecture
-- [ ] Setup required packages and dependencies
+- [x] Setup required packages and dependencies
 
 ## 2. Backend Development
 
-- [ ] Implement database models (Poll, User, Vote)
+- [x] Implement database models (Poll, User, Vote)
 - [ ] Create API endpoints for polls (CRUD operations)
 - [ ] Create API endpoints for votes
 - [ ] Implement poll cross-referencing logic
