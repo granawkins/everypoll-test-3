@@ -86,27 +86,29 @@ app.get('/api/auth/google/callback',
     res.redirect('/');
   }
 );
-app.get('/api/auth/me', (req: Request, res: Response): void => {
+app.get('/api/auth/me', (req: Request, res: Response) => {
   if (req.isAuthenticated()) {
-    return res.json(req.user);
+    res.json(req.user);
+  } else {
+    res.status(401).json({ message: 'Not authenticated' });
   }
-  return res.status(401).json({ message: 'Not authenticated' });
 });
-app.post('/api/auth/logout', (req: Request, res: Response): void => {
-  req.logout((err: Error | null): void => {
+app.post('/api/auth/logout', (req: Request, res: Response) => {
+  req.logout((err: Error | null) => {
     if (err) {
-      return res.status(500).json({ message: 'Error logging out' });
+      res.status(500).json({ message: 'Error logging out' });
+    } else {
+      res.json({ message: 'Logged out successfully' });
     }
-    res.json({ message: 'Logged out successfully' });
   });
 });
 
 // Basic API route
-app.get('/api', (req: Request, res: Response): void => {
+app.get('/api', (req: Request, res: Response) => {
   res.json({ message: 'Welcome to the EveryPoll API!' });
 });
 
 // Serve React app for any other routes (SPA)
-app.get('*', (req: Request, res: Response): void => {
+app.get('*', (req: Request, res: Response) => {
   res.sendFile(path.join(CLIENT_DIST_PATH, 'index.html'));
 });
