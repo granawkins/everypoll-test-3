@@ -1,7 +1,6 @@
 import passport from 'passport';
 import { Strategy as GoogleStrategy, Profile } from 'passport-google-oauth20';
 import prisma from './database';
-import { User as PrismaUser } from '@prisma/client';
 
 // Define a UserType that's compatible with both Express and Prisma
 type UserType = {
@@ -11,6 +10,9 @@ type UserType = {
   profileImage?: string | null;
   googleId?: string | null;
 };
+
+// Define type for the done callback used in passport strategies
+type VerifyCallback = (error: Error | null, user?: any, info?: any) => void;
 
 // Add passport-express.d.ts in your types directory if needed for a long-term solution
 
@@ -39,7 +41,7 @@ export default function configurePassport() {
         clientSecret: process.env.GOOGLE_CLIENT_SECRET || '',
         callbackURL: process.env.GOOGLE_CALLBACK_URL || '',
       },
-      async (accessToken: string, refreshToken: string, profile: Profile, done: Function) => {
+      async (accessToken: string, refreshToken: string, profile: Profile, done: VerifyCallback) => {
         try {
           // Find or create user
           const user = await prisma.user.upsert({
