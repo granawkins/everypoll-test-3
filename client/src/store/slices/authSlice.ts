@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import axios from '../../api/axios';
+import axiosInstance from '../../api/axios';
+import axios, { AxiosError } from 'axios';
 
 // Define types
 interface User {
@@ -29,11 +30,11 @@ export const fetchCurrentUser = createAsyncThunk(
   'auth/fetchCurrentUser',
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axios.get('/auth/me');
+      const response = await axiosInstance.get('/auth/me');
       return response.data;
     } catch (error) {
-      if (axios.isAxiosError(error) && error.response) {
-        return rejectWithValue(error.response.data.message || 'Failed to fetch user');
+      if (axios.isAxiosError(error)) {
+        return rejectWithValue(error.response?.data?.message || 'Failed to fetch user');
       }
       return rejectWithValue('An unexpected error occurred');
     }
@@ -44,11 +45,11 @@ export const logout = createAsyncThunk(
   'auth/logout',
   async (_, { rejectWithValue }) => {
     try {
-      await axios.post('/auth/logout');
+      await axiosInstance.post('/auth/logout');
       return null;
     } catch (error) {
-      if (axios.isAxiosError(error) && error.response) {
-        return rejectWithValue(error.response.data.message || 'Failed to logout');
+      if (axios.isAxiosError(error)) {
+        return rejectWithValue(error.response?.data?.message || 'Failed to logout');
       }
       return rejectWithValue('An unexpected error occurred');
     }

@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from '../../api/axios';
+import axiosInstance from '../../api/axios';
+import axios from 'axios';
 
 // Types for poll data
 interface Option {
@@ -49,7 +50,7 @@ export const fetchPolls = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      const response = await axios.get(
+      const response = await axiosInstance.get(
         `/api/polls?page=${page}&limit=${limit}${search ? `&search=${search}` : ''}`
       );
       return {
@@ -58,8 +59,8 @@ export const fetchPolls = createAsyncThunk(
         page,
       };
     } catch (error) {
-      if (axios.isAxiosError(error) && error.response) {
-        return rejectWithValue(error.response.data.message || 'Failed to fetch polls');
+      if (axios.isAxiosError(error)) {
+        return rejectWithValue(error.response?.data?.message || 'Failed to fetch polls');
       }
       return rejectWithValue('An unexpected error occurred');
     }
@@ -70,11 +71,11 @@ export const fetchPollById = createAsyncThunk(
   'polls/fetchPollById',
   async (id: string, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`/api/polls/${id}`);
+      const response = await axiosInstance.get(`/api/polls/${id}`);
       return response.data;
     } catch (error) {
-      if (axios.isAxiosError(error) && error.response) {
-        return rejectWithValue(error.response.data.message || 'Failed to fetch poll');
+      if (axios.isAxiosError(error)) {
+        return rejectWithValue(error.response?.data?.message || 'Failed to fetch poll');
       }
       return rejectWithValue('An unexpected error occurred');
     }
@@ -93,11 +94,11 @@ export const createPoll = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      const response = await axios.post('/api/polls', pollData);
+      const response = await axiosInstance.post('/api/polls', pollData);
       return response.data;
     } catch (error) {
-      if (axios.isAxiosError(error) && error.response) {
-        return rejectWithValue(error.response.data.message || 'Failed to create poll');
+      if (axios.isAxiosError(error)) {
+        return rejectWithValue(error.response?.data?.message || 'Failed to create poll');
       }
       return rejectWithValue('An unexpected error occurred');
     }
@@ -111,11 +112,11 @@ export const votePoll = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      const response = await axios.post(`/api/polls/${pollId}/vote`, { optionId });
+      const response = await axiosInstance.post(`/api/polls/${pollId}/vote`, { optionId });
       return { ...response.data, pollId, optionId };
     } catch (error) {
-      if (axios.isAxiosError(error) && error.response) {
-        return rejectWithValue(error.response.data.message || 'Failed to vote');
+      if (axios.isAxiosError(error)) {
+        return rejectWithValue(error.response?.data?.message || 'Failed to vote');
       }
       return rejectWithValue('An unexpected error occurred');
     }
