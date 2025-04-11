@@ -1,4 +1,5 @@
-import express, { Request, Response } from 'express';
+import express from 'express';
+import type { Request, Response } from 'express';
 import cors from 'cors';
 import path from 'path';
 import session from 'express-session';
@@ -66,12 +67,13 @@ configurePassport(); // Set up passport strategies
 app.use(express.static(CLIENT_DIST_PATH));
 
 // Error handler middleware
-app.use((err: Error, req: Request, res: Response) => {
+app.use(function(err, req, res, next) {
   console.error(err.stack);
   res.status(500).json({
     message: 'Something went wrong!',
     error: process.env.NODE_ENV === 'production' ? {} : err
   });
+  next();
 });
 
 // Define API routes here (will be implemented later)
@@ -79,18 +81,18 @@ app.use((err: Error, req: Request, res: Response) => {
 app.get('/api/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 app.get('/api/auth/google/callback', 
   passport.authenticate('google', { failureRedirect: '/login' }),
-  (req, res) => {
+  function(req, res) {
     res.redirect('/');
   }
 );
-app.get('/api/auth/me', (req, res) => {
+app.get('/api/auth/me', function(req, res) {
   if (req.isAuthenticated()) {
     return res.json(req.user);
   }
   return res.status(401).json({ message: 'Not authenticated' });
 });
-app.post('/api/auth/logout', (req, res) => {
-  req.logout((err) => {
+app.post('/api/auth/logout', function(req, res) {
+  req.logout(function(err) {
     if (err) {
       return res.status(500).json({ message: 'Error logging out' });
     }
@@ -99,11 +101,11 @@ app.post('/api/auth/logout', (req, res) => {
 });
 
 // Basic API route
-app.get('/api', (req: Request, res: Response) => {
+app.get('/api', function(req, res) {
   res.json({ message: 'Welcome to the EveryPoll API!' });
 });
 
 // Serve React app for any other routes (SPA)
-app.get('*', (req: Request, res: Response) => {
+app.get('*', function(req, res) {
   res.sendFile(path.join(CLIENT_DIST_PATH, 'index.html'));
 });

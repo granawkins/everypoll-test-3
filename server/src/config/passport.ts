@@ -1,15 +1,24 @@
 import passport from 'passport';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import prisma from './database';
-import { User } from '@prisma/client';
+import { User as PrismaUser } from '@prisma/client';
+
+// Declare type augmentation for passport
+declare global {
+  namespace Express {
+    // eslint-disable-next-line @typescript-eslint/no-empty-interface
+    interface User extends PrismaUser {}
+  }
+}
 
 export default function configurePassport() {
   // Serialize and deserialize user for sessions
-  passport.serializeUser((user: User, done) => {
+  // Use type any to avoid conflicts between Passport and Prisma types
+  passport.serializeUser((user: any, done: any) => {
     done(null, user.id);
   });
 
-  passport.deserializeUser(async (id: string, done) => {
+  passport.deserializeUser(async (id: string, done: any) => {
     try {
       const user = await prisma.user.findUnique({ where: { id } });
       done(null, user);
