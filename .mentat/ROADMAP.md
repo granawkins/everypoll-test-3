@@ -6,23 +6,24 @@ This roadmap outlines the steps needed to transform the JavaScript template into
 
 - [x] Define database schema for polls, users, and votes
 - [x] Setup required packages and dependencies
-- [ ] Install and configure frontend dependencies
+- [x] Install and configure frontend dependencies
   - Material-UI for component library
   - React Query for data fetching
   - React Hook Form for form handling
   - Recharts for visualizations
   - Redux Toolkit for global state management
-- [ ] Install and configure backend dependencies
+- [x] Install and configure backend dependencies
   - Express middleware (session, cookie-parser, etc.)
   - Zod for API validation
   - Required security packages
 
 ## 2. Backend Development - Authentication
 
-- [ ] Complete Google OAuth integration
-  - Finish Passport.js configuration
-  - Create login/logout routes
-  - Implement session handling
+- [x] Setup basic Google OAuth integration structure
+- [ ] Complete authentication flow
+  - Implement proper login/logout functionality
+  - Add proper session handling
+  - Create authentication error handling
 - [ ] Add authentication middleware for protected routes
 - [ ] Create user API endpoints (profile, settings)
 
@@ -76,10 +77,9 @@ This roadmap outlines the steps needed to transform the JavaScript template into
 
 ## 6. State Management & Data Flow
 
-- [ ] Setup Redux store with slices
+- [x] Setup Redux store with slices
   - Auth slice for user state
   - Polls slice for poll data
-  - UI slice for global UI state
 - [ ] Implement React Query hooks
   - Poll fetching and caching
   - Voting and results
