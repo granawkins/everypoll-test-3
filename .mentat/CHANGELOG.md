@@ -6,8 +6,23 @@ This file tracks the progress and changes made to transform the JavaScript templ
 
 - Created project roadmap
 - Added changelog to track progress
-- Installed and configured required dependencies:
-  - Backend: PostgreSQL with Prisma ORM, Passport.js for Google OAuth, Zod for validation, and security packages
-  - Frontend: Material-UI components, Redux Toolkit and React Query for state management, React Hook Form, and Recharts for visualizations
-  - Created database schema for users, polls, votes, and cross-references
-  - Added configuration for database connections, authentication, and API clients
+- Created database schema for users, polls, votes, and cross-references in Prisma
+
+## Dependencies Configuration - April 14, 2025
+
+- Installed and configured frontend dependencies:
+  - Material-UI components and theme
+  - Redux Toolkit with auth and polls slices
+  - React Query for data fetching
+  - React Hook Form for form management
+  - Recharts for poll visualization
+  - Utilities: date-fns, lodash
+- Installed and configured backend dependencies:
+  - Express middleware with security enhancements
+  - Passport.js with Google OAuth structure
+  - Session management with PostgreSQL storage
+  - Validation with Zod
+  - Security packages: helmet, bcrypt, JWT
+- Added environment variable templates
+- Enhanced TypeScript configuration for better type safety
+- Set up initial authentication routes
