@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
-import mentatLogo from '/mentat.png';
+import { Box, Container } from '@mui/material';
 import Background from './components/Background';
+import Header from './components/Header';
 
 function App() {
   const [message, setMessage] = useState<string | null>(null);
@@ -35,43 +36,50 @@ function App() {
   }, []);
 
   return (
-    <div
-      style={{
+    <Box
+      sx={{
         display: 'flex',
         flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'flex-start',
-        height: '100vh',
-        width: '100vw',
+        minHeight: '100vh',
+        width: '100%',
         backgroundColor: '#f0f0f0',
-        gap: '1rem',
       }}
     >
       <Background />
-      <div>
-        <a href="https://mentat.ai" target="_blank">
-          <img src={mentatLogo} className="logo" alt="Mentat logo" />
-        </a>
-      </div>
-      <h1>Mentat Template JS</h1>
-      <ul>
-        <li>Frontend: React, Vite, Vitest</li>
-        <li>Backend: Node.js, Express, Jest</li>
-        <li>Utilities: Typescript, ESLint, Prettier</li>
-      </ul>
-      <p>
-        <b>Message from server:</b>{' '}
-        {loading
-          ? 'Loading message from server...'
-          : error
-            ? `Error: ${error}`
-            : message
-              ? message
-              : 'No message from server'}
-      </p>
+      <Header />
+      
+      <Container
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          flex: 1,
+          padding: 3,
+          gap: 2,
+          position: 'relative',
+          zIndex: 2,
+        }}
+      >
+        <ul>
+          <li>Frontend: React, Vite, Vitest</li>
+          <li>Backend: Node.js, Express, Jest</li>
+          <li>Utilities: Typescript, ESLint, Prettier</li>
+        </ul>
+        <p>
+          <b>Message from server:</b>{' '}
+          {loading
+            ? 'Loading message from server...'
+            : error
+              ? `Error: ${error}`
+              : message
+                ? message
+                : 'No message from server'}
+        </p>
 
-      <p>Create a new GitHub issue at tag '@MentatBot' to get started.</p>
-    </div>
+        <p>Create a new GitHub issue at tag '@MentatBot' to get started.</p>
+      </Container>
+    </Box>
   );
 }
 
