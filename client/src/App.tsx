@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import mentatLogo from '/mentat.png';
 import Background from './components/Background';
+import Header from './components/Header';
 
 function App() {
   const [message, setMessage] = useState<string | null>(null);
@@ -48,29 +48,27 @@ function App() {
       }}
     >
       <Background />
-      <div>
-        <a href="https://mentat.ai" target="_blank">
-          <img src={mentatLogo} className="logo" alt="Mentat logo" />
-        </a>
-      </div>
-      <h1>Mentat Template JS</h1>
-      <ul>
-        <li>Frontend: React, Vite, Vitest</li>
-        <li>Backend: Node.js, Express, Jest</li>
-        <li>Utilities: Typescript, ESLint, Prettier</li>
-      </ul>
-      <p>
-        <b>Message from server:</b>{' '}
-        {loading
-          ? 'Loading message from server...'
-          : error
-            ? `Error: ${error}`
-            : message
-              ? message
-              : 'No message from server'}
-      </p>
+      <Header />
+      <div style={{ marginTop: '1.5rem' }}>
+        <h1>Mentat Template JS</h1>
+        <ul>
+          <li>Frontend: React, Vite, Vitest</li>
+          <li>Backend: Node.js, Express, Jest</li>
+          <li>Utilities: Typescript, ESLint, Prettier</li>
+        </ul>
+        <p>
+          <b>Message from server:</b>{' '}
+          {loading
+            ? 'Loading message from server...'
+            : error
+              ? `Error: ${error}`
+              : message
+                ? message
+                : 'No message from server'}
+        </p>
 
-      <p>Create a new GitHub issue at tag '@MentatBot' to get started.</p>
+        <p>Create a new GitHub issue at tag '@MentatBot' to get started.</p>
+      </div>
     </div>
   );
 }
