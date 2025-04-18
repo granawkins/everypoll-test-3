@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import mentatLogo from '/mentat.png';
 import Background from './components/Background';
+import Header from './components/Header';
 
 function App() {
   const [message, setMessage] = useState<string | null>(null);
@@ -45,14 +45,11 @@ function App() {
         width: '100vw',
         backgroundColor: '#f0f0f0',
         gap: '1rem',
+        paddingTop: '90px', // Add padding to account for fixed header
       }}
     >
       <Background />
-      <div>
-        <a href="https://mentat.ai" target="_blank">
-          <img src={mentatLogo} className="logo" alt="Mentat logo" />
-        </a>
-      </div>
+      <Header />
       <h1>Mentat Template JS</h1>
       <ul>
         <li>Frontend: React, Vite, Vitest</li>
