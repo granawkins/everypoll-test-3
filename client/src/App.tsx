@@ -69,6 +69,22 @@ function App() {
               ? message
               : 'No message from server'}
       </p>
+      
+      <div
+        style={{
+          backgroundColor: '#e0f7fa',
+          padding: '1rem',
+          borderRadius: '8px',
+          maxWidth: '80%',
+          margin: '0.5rem 0',
+          textAlign: 'center',
+          border: '1px dashed #4fc3f7',
+        }}
+      >
+        <p style={{ margin: 0, fontWeight: 'bold' }}>🐄 Animal Joke of the Day 🐄</p>
+        <p style={{ margin: '0.5rem 0' }}>How do you keep a bull from charging?</p>
+        <p style={{ fontStyle: 'italic' }}>Take away its credit card!</p>
+      </div>
 
       <p>Create a new GitHub issue at tag '@MentatBot' to get started.</p>
     </div>
