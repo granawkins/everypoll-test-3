@@ -1,7 +1,7 @@
 // Type definitions for express with Passport
 
 // Make this a proper module
-export {}
+export {};
 
 // Extend Express Request interface with Passport properties
 declare global {

@@ -19,44 +19,53 @@ export const PORT = process.env.PORT || 5000;
 export const CLIENT_DIST_PATH = path.join(__dirname, '../../client/dist');
 
 // Security middleware
-app.use(helmet({
-  contentSecurityPolicy: {
-    directives: {
-      defaultSrc: ["'self'"],
-      scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
-      styleSrc: ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
-      fontSrc: ["'self'", 'https://fonts.gstatic.com'],
-      imgSrc: ["'self'", 'data:', 'https:'],
-      connectSrc: ["'self'", process.env.NODE_ENV === 'development' ? 'http://localhost:*' : ''],
-    }
-  }
-}));
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
+        styleSrc: ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
+        fontSrc: ["'self'", 'https://fonts.gstatic.com'],
+        imgSrc: ["'self'", 'data:', 'https:'],
+        connectSrc: [
+          "'self'",
+          process.env.NODE_ENV === 'development' ? 'http://localhost:*' : '',
+        ],
+      },
+    },
+  })
+);
 
 // Basic middleware
-app.use(cors({
-  origin: process.env.CLIENT_URL || 'http://localhost:3000',
-  credentials: true
-}));
+app.use(
+  cors({
+    origin: process.env.CLIENT_URL || 'http://localhost:3000',
+    credentials: true,
+  })
+);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 // Session configuration
 const PostgresStore = connectPgSimple(session);
-app.use(session({
-  store: new PostgresStore({
-    conString: process.env.DATABASE_URL,
-    tableName: 'session'
-  }),
-  secret: process.env.SESSION_SECRET || 'everypoll_secret_key',
-  resave: false,
-  saveUninitialized: false,
-  cookie: {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    maxAge: 1000 * 60 * 60 * 24 * 7 // 1 week
-  }
-}));
+app.use(
+  session({
+    store: new PostgresStore({
+      conString: process.env.DATABASE_URL,
+      tableName: 'session',
+    }),
+    secret: process.env.SESSION_SECRET || 'everypoll_secret_key',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      maxAge: 1000 * 60 * 60 * 24 * 7, // 1 week
+    },
+  })
+);
 
 // Initialize Passport
 app.use(passport.initialize());
@@ -67,11 +76,16 @@ configurePassport(); // Set up passport strategies
 app.use(express.static(CLIENT_DIST_PATH));
 
 // Error handler middleware
-const errorHandler: ErrorRequestHandler = (err: Error, req: Request, res: Response, next: NextFunction) => {
+const errorHandler: ErrorRequestHandler = (
+  err: Error,
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   console.error(err.stack);
   res.status(500).json({
     message: 'Something went wrong!',
-    error: process.env.NODE_ENV === 'production' ? {} : err
+    error: process.env.NODE_ENV === 'production' ? {} : err,
   });
   next();
 };
@@ -79,8 +93,12 @@ app.use(errorHandler);
 
 // Define API routes here (will be implemented later)
 // Auth routes
-app.get('/api/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
-app.get('/api/auth/google/callback', 
+app.get(
+  '/api/auth/google',
+  passport.authenticate('google', { scope: ['profile', 'email'] })
+);
+app.get(
+  '/api/auth/google/callback',
   passport.authenticate('google', { failureRedirect: '/login' }),
   (req: Request, res: Response): void => {
     res.redirect('/');

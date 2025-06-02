@@ -13,8 +13,8 @@ type UserType = {
 
 // Define type for the done callback used in passport strategies
 type VerifyCallback = (
-  error: Error | null, 
-  user?: UserType | false, 
+  error: Error | null,
+  user?: UserType | false,
   info?: { message: string }
 ) => void;
 
@@ -41,8 +41,8 @@ export default function configurePassport() {
   // Skip strategy initialization in test environment or when credentials are missing
   const isTestEnvironment = process.env.NODE_ENV === 'test';
   const hasCredentials = !!(
-    process.env.GOOGLE_CLIENT_ID && 
-    process.env.GOOGLE_CLIENT_SECRET && 
+    process.env.GOOGLE_CLIENT_ID &&
+    process.env.GOOGLE_CLIENT_SECRET &&
     process.env.GOOGLE_CALLBACK_URL
   );
 
@@ -54,7 +54,12 @@ export default function configurePassport() {
           clientSecret: process.env.GOOGLE_CLIENT_SECRET || '',
           callbackURL: process.env.GOOGLE_CALLBACK_URL || '',
         },
-        async (accessToken: string, refreshToken: string, profile: Profile, done: VerifyCallback) => {
+        async (
+          accessToken: string,
+          refreshToken: string,
+          profile: Profile,
+          done: VerifyCallback
+        ) => {
           try {
             // Find or create user
             const user = await prisma.user.upsert({
@@ -67,11 +72,14 @@ export default function configurePassport() {
                 googleId: profile.id,
               },
             });
-            
+
             return done(null, user);
           } catch (error) {
             // Type cast error to something safer than any
-            const err = error instanceof Error ? error : new Error('Unknown error during authentication');
+            const err =
+              error instanceof Error
+                ? error
+                : new Error('Unknown error during authentication');
             return done(err, undefined);
           }
         }
