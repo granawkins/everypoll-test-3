@@ -34,7 +34,9 @@ export const fetchCurrentUser = createAsyncThunk(
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        return rejectWithValue(error.response?.data?.message || 'Failed to fetch user');
+        return rejectWithValue(
+          error.response?.data?.message || 'Failed to fetch user'
+        );
       }
       return rejectWithValue('An unexpected error occurred');
     }
@@ -49,7 +51,9 @@ export const logout = createAsyncThunk(
       return null;
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        return rejectWithValue(error.response?.data?.message || 'Failed to logout');
+        return rejectWithValue(
+          error.response?.data?.message || 'Failed to logout'
+        );
       }
       return rejectWithValue('An unexpected error occurred');
     }
@@ -86,7 +90,7 @@ const authSlice = createSlice({
       })
       .addCase(fetchCurrentUser.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload as string || 'Failed to fetch user';
+        state.error = (action.payload as string) || 'Failed to fetch user';
       })
       // logout
       .addCase(logout.pending, (state) => {
@@ -100,7 +104,7 @@ const authSlice = createSlice({
       })
       .addCase(logout.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload as string || 'Failed to logout';
+        state.error = (action.payload as string) || 'Failed to logout';
       });
   },
 });

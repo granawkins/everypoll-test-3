@@ -46,7 +46,11 @@ const initialState: PollsState = {
 export const fetchPolls = createAsyncThunk(
   'polls/fetchPolls',
   async (
-    { page, limit = 10, search = '' }: { page: number; limit?: number; search?: string },
+    {
+      page,
+      limit = 10,
+      search = '',
+    }: { page: number; limit?: number; search?: string },
     { rejectWithValue }
   ) => {
     try {
@@ -60,7 +64,9 @@ export const fetchPolls = createAsyncThunk(
       };
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        return rejectWithValue(error.response?.data?.message || 'Failed to fetch polls');
+        return rejectWithValue(
+          error.response?.data?.message || 'Failed to fetch polls'
+        );
       }
       return rejectWithValue('An unexpected error occurred');
     }
@@ -75,7 +81,9 @@ export const fetchPollById = createAsyncThunk(
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        return rejectWithValue(error.response?.data?.message || 'Failed to fetch poll');
+        return rejectWithValue(
+          error.response?.data?.message || 'Failed to fetch poll'
+        );
       }
       return rejectWithValue('An unexpected error occurred');
     }
@@ -98,7 +106,9 @@ export const createPoll = createAsyncThunk(
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        return rejectWithValue(error.response?.data?.message || 'Failed to create poll');
+        return rejectWithValue(
+          error.response?.data?.message || 'Failed to create poll'
+        );
       }
       return rejectWithValue('An unexpected error occurred');
     }
@@ -112,11 +122,15 @@ export const votePoll = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      const response = await axiosInstance.post(`/api/polls/${pollId}/vote`, { optionId });
+      const response = await axiosInstance.post(`/api/polls/${pollId}/vote`, {
+        optionId,
+      });
       return { ...response.data, pollId, optionId };
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        return rejectWithValue(error.response?.data?.message || 'Failed to vote');
+        return rejectWithValue(
+          error.response?.data?.message || 'Failed to vote'
+        );
       }
       return rejectWithValue('An unexpected error occurred');
     }
@@ -155,7 +169,7 @@ const pollsSlice = createSlice({
       })
       .addCase(fetchPolls.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload as string || 'Failed to fetch polls';
+        state.error = (action.payload as string) || 'Failed to fetch polls';
       })
       // fetchPollById
       .addCase(fetchPollById.pending, (state) => {
@@ -168,7 +182,7 @@ const pollsSlice = createSlice({
       })
       .addCase(fetchPollById.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload as string || 'Failed to fetch poll';
+        state.error = (action.payload as string) || 'Failed to fetch poll';
       })
       // createPoll
       .addCase(createPoll.pending, (state) => {
@@ -182,7 +196,7 @@ const pollsSlice = createSlice({
       })
       .addCase(createPoll.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload as string || 'Failed to create poll';
+        state.error = (action.payload as string) || 'Failed to create poll';
       })
       // votePoll
       .addCase(votePoll.pending, (state) => {
@@ -191,41 +205,44 @@ const pollsSlice = createSlice({
       })
       .addCase(votePoll.fulfilled, (state, action) => {
         state.loading = false;
-        
+
         // Update the current poll if it matches
-        if (state.currentPoll && state.currentPoll.id === action.payload.pollId) {
+        if (
+          state.currentPoll &&
+          state.currentPoll.id === action.payload.pollId
+        ) {
           state.currentPoll = {
             ...state.currentPoll,
             userVote: action.payload.optionId,
-            options: state.currentPoll.options.map(option => {
+            options: state.currentPoll.options.map((option) => {
               if (option.id === action.payload.optionId) {
                 return {
                   ...option,
-                  votes: (option.votes || 0) + 1
+                  votes: (option.votes || 0) + 1,
                 };
               }
               return option;
             }),
-            totalVotes: (state.currentPoll.totalVotes || 0) + 1
+            totalVotes: (state.currentPoll.totalVotes || 0) + 1,
           };
         }
 
         // Update the poll in the list if it exists
-        state.polls = state.polls.map(poll => {
+        state.polls = state.polls.map((poll) => {
           if (poll.id === action.payload.pollId) {
             return {
               ...poll,
               userVote: action.payload.optionId,
-              options: poll.options.map(option => {
+              options: poll.options.map((option) => {
                 if (option.id === action.payload.optionId) {
                   return {
                     ...option,
-                    votes: (option.votes || 0) + 1
+                    votes: (option.votes || 0) + 1,
                   };
                 }
                 return option;
               }),
-              totalVotes: (poll.totalVotes || 0) + 1
+              totalVotes: (poll.totalVotes || 0) + 1,
             };
           }
           return poll;
@@ -233,7 +250,7 @@ const pollsSlice = createSlice({
       })
       .addCase(votePoll.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload as string || 'Failed to vote';
+        state.error = (action.payload as string) || 'Failed to vote';
       });
   },
 });

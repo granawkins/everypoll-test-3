@@ -31,4 +31,3 @@ The following npm commands are available at the root level. "\*" indicates they 
 - `npm run test`\* - Run tests once
 - `npm run lint` - Run ESLint to check code quality
 - `npm run format` - Run Prettier to format code
-
